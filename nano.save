@@ -1,0 +1,19 @@
+## Intro ##
+The script runs a few steps in order to backup and upload the backup to dropbox and the BRCK.
+
+* Create a backup for all the database and saves it on /backups . This uses mysqldump --single-transaction so it is lock safe;
+* Zips the '.sql' file created by the mysqldump and also deletes the .sql file to save storage;
+* Check connection to the internet and if connection is found. Send file to dropbox. Adds to a .txt file the name if the file if it was sent with success
+* Checks connection to the BRCK. If connection is found, send files to /home/openmrs/backups on the BRCK. Adds to a .txt file the files that were sent with success.
+* Cleans old files on the BRCK and locally
+* If there is internet, uploads all files in /toCloud, one by one, to dropbox. If a file is uploaded correctly, it is then moved to /toCloud/cloud. 
+* Checks for old backups in /toCloud/cloud and dlete them. If a file is older than 30 days and there are at least 30 files on the folder, it is removed in order to save storage.
+* Checks for old backups in /toBRCK/onBRCK least 30 files on the folder, it is removed and the BRCK copy is also removed. If it is not possible to remove the copy on the BRCK, the local copy will not be deleted.
+
+## Usage ##
+
+This script requires PHP 7 (64 bits) with cURL enabled. Simply run the script with php.exe. It is possible to create an automatic daily task for it via Windows Task Scheduler. Choose php.exe as executable and send the absolute path to /script.php as parameters.
+
+It is also needed to specify the database information (host, username, password, database, tables). It is also needed to change the DROPBOX auth credentials on the upload_to_cloud function.
+
+**WARNING: Right now it is using the root user on the BRCK and the root user on mysql.**
