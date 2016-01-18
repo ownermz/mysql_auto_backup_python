@@ -9,7 +9,7 @@ The script runs a few steps in order to backup and upload the backup to dropbox 
 
 ## Usage ##
 
-This script requires python as well as Dropbox, Paramiko and [SCP](https://github.com/jbardin/scp.py) libraries.
+This script requires python as well as Dropbox, Paramiko and ![https://github.com/jbard](SCP) libraries.
 
 Some information is needed for using this script: MySQL Credentials, BRCK credentials and Dropbox Auth Token.
 
