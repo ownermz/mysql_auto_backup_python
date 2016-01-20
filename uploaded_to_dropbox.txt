@@ -29,3 +29,5 @@ backups/backup-18-01-20161131.zip
 backups/backup-18-01-20161133.zip
 backups/backup-18-01-20161134.zip
 backups/backup-18-01-20161144.zip
+backups/backup-20-01-20161543.zip
+backups/backup-20-01-20161547.zip
