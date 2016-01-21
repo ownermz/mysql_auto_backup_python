@@ -7,6 +7,7 @@ import time
 import zlib
 import zipfile
 import sys
+from shutil import copyfile
 
 
 import datetime
@@ -20,17 +21,16 @@ def init ():
     tries = 3
     backupDatabase()
     while tries > 0:
-        checkBrck = uploadBrck()
-        checkBrck = True;
+        #checkBrck = uploadBrck()
         checkDropbox = uploadDropbox()
         
 
-        if checkBrck and checkDropbox:
+        if checkDropbox:
             break
         tries -= 1
         if tries > 0:
-            if not checkBrck:
-                print "Error when uploading to the BRCK"
+            #if not checkBrck:
+             #   print "Error when uploading to the BRCK"
             if not checkDropbox:
                 print "Error when uploading to dropbox"
 				
@@ -46,13 +46,13 @@ def cleanBackups():
     print "Checking files to be cleaned"
 
     #Store in var lines all the files current on the BRCK
-    with open('uploaded_to_brck.txt') as logFile:
-        lines = logFile.read().splitlines()
+    #with open('uploaded_to_brck.txt') as logFile:
+     #   lines = logFile.read().splitlines()
 
     try:
         #Create SSH and SCP session.
-        ssh = createSSHClient()
-        scp = SCPClient(ssh.get_transport())
+        #ssh = createSSHClient()
+        #scp = SCPClient(ssh.get_transport())
 
         ##
         #Checks for last modified date on file and remove if it is older than 30 days
@@ -62,6 +62,7 @@ def cleanBackups():
               curpath = os.path.join(dirpath, file)
               file_modified = datetime.datetime.fromtimestamp(os.path.getmtime(curpath))
               if len(filenames) > 30 and datetime.datetime.now() - file_modified > datetime.timedelta(days=30):
+                  '''
                   #Check if file is in the BRCK
                   if 'backups/'+file in lines:
                       print 'Removing '+file+' from the BRCK'
@@ -71,11 +72,11 @@ def cleanBackups():
                           if line!="backups/"+file:
                             f.write(line +"\n")
                       f.close()
-
+                    '''
                   #Remove file from System
                   os.remove(curpath)
 
-        ssh.close()
+        #ssh.close()
     except:
         print 'Failed connecting to the BRCK'
         print "Error description:", sys.exc_info()[0]
@@ -102,6 +103,9 @@ def backupDatabase ():
         zf.write('backups/'+file_name+'.sql')
     finally:
         zf.close()
+        if not os.path.isdir("c:/OpenMRSBackups"):
+            os.makedirs("c:/OpenMRSBackups/")
+        copyfile('backups/'+file_name+'.zip', "c:/OpenMRSBackups/"+file_name+'.zip')
         os.remove('backups/'+file_name+'.sql')
 
     return
